@@ -17,8 +17,8 @@
 2. Student ID: F11502002
 3. Department: Electronic and Computer Engineering
 4. Student status: Exchange student (1 semester)
-5. Path: (Basic — 802.11e reproduction / Advanced — own topic) TODO
-6. Topic: yet to decide TODO
+5. Path: Basic — 802.11e reproduction 
+6. Topic: -
 
 ## 2. Assignments
 
