@@ -41,8 +41,8 @@ have an LLM review it, and commit the feedback.
 - [Assignment Information](https://hackmd.io/jOXxNllMRY-hr_C1fQct6w#A1-%E2%80%94-Background-Study-Notes)
 - Submissions:
   - [ ] [Study Note](A1-background/study-note.md) — five-minute presentation, how to read a paper, and your project proposal
-  - [ ] [Slides](path to your slides) TODO
-  - [ ] [Rehearsal Presentation](path to recording + LLM feedback) — Speaker Coach recording and the LLM review TODO
+  - [ ] [Slides](path to your slides) <!-- TODO -->
+  - [ ] [Rehearsal Presentation](path to recording + LLM feedback) — Speaker Coach recording and the LLM review <!-- TODO -->
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
 
 ### A2 — ns-3 Setup & First Scenario
@@ -83,3 +83,8 @@ have an LLM review it, and commit the feedback.
   - [ ] [Results vs. baseline](path to specific section in your report)
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
+
+
+
+
+
