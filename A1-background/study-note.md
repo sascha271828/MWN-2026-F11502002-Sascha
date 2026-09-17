@@ -15,6 +15,8 @@
     - [2.2 Literature Survey](#22-literature-survey)
     - [2.3 Related Work](#23-related-work)
   - [3. Reading paper for Basic Path](#3-reading-paper-for-basic-path)
+    - [3.1 First Pass](#31-first-pass)
+    - [3.2 Second Pass](#32-second-pass)
 
 
 ## 1. Five-minute presentation
@@ -116,7 +118,7 @@ Afterwards able to summarize the papers contents with supporting evidence
 Second Pass is good enough for a paper I'm interested in but not part of my research
 
 If unable to understand the paper (for wathever reason):
-- set paper aside and hope it's not relevant 
+- set paper aside and hope it's not relevant for my future career
 - read again (other time / after more research)
 - go to third pass
 
@@ -137,7 +139,7 @@ should be able to reconstruct the entire structure of paper from memory as well 
 
 
 ### 2.2 Literature Survey
-Reading papers in fiel I'm non familiar in to get an understanding of the topic
+Reading papers in fiel I'm not familiar in to get an understanding of the topic
 
 1. Use academic search engine (Google Scholar, CiteSeer, ...) with keywords
    - do first pass for papers
@@ -153,7 +155,7 @@ Reading papers in fiel I'm non familiar in to get an understanding of the topic
 ### 2.3 Related Work
 *for reviewers*: Timothy Roscoe’s paper on [“Writing reviews for systems conferences”](https://people.inf.ethz.ch/troscoe/pubs/review-writing.pdf)
 
-*wiriting techical papers*: Henning Schulzrinne’s [web site](https://www.cs.columbia.edu/~hgs/etc/writing-style.html)  
+*wiriting techical papers*: Henning Schulzrinne’s [website](https://www.cs.columbia.edu/~hgs/etc/writing-style.html)  
 George Whitesides’s [overview](https://intra.ece.ucr.edu/~rlake/Whitesides_writing_res_paper.pdf) of the process
 
 *general research skills*: Simon Peyton Jones [website](https://simon.peytonjones.org/research-skills/)
@@ -164,7 +166,45 @@ George Whitesides’s [overview](https://intra.ece.ucr.edu/~rlake/Whitesides_wri
 
 
 ## 3. Reading paper for Basic Path
-*applying the Three-Pass Approach to understand the* <!-- TODO -->
+*applying the Three-Pass Approach to understand the [Analysis of IEEE 802.11e for QoS support in wireless LANs](https://ieeexplore.ieee.org/document/126585) paper* 
+
+
+### 3.1 First Pass
+
+Answering the *five Cs*
+
+1. *Category*: What type of paper is this?  
+(measurement paper, analysis of an existing system, description of a research prototype,...)
+
+It's protocol analysis and simulation-based evaluation paper.
+
+
+2. *Context*: Which other papers is it related to?  
+
+Which theoretical bases were used to analyze the problem?
+It analyzes the at the time proposed IEEE 802.11e standard and compares it with the predecessor IEEE 802.11 standard focusing on QoS
+
+
+3. *Correctness*: Do the assumptions appear to be valid?
+
+I found basicaly no assumptions, or at least I didn't manage to notice them.
+The paper seems to be based upon a solid basis (the standards by IEEE).
+
+4. *Contributions*: What are the paper’s main contributions?
+
+It compares a then draft of a new standard with the *legacy* version in terms of QoS, providing an analysis based upon simulations to evaluate the effectifness of the new protcol.
+
+5. *Clarity*: Is the paper well written?
+
+The structure seems coherent and logical. Just by skimming the article I got a general idea what the paper wants to show.
+
+*Conclusion*: Based upon the first pass I believe this paper is worth reading, in order to understand the 802.11e standard (altough I would've had to read the paper anyways because of the Course)
+
+
+### 3.2 Second Pass
+
+
+
 
 
 
