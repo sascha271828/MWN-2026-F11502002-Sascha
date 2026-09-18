@@ -17,6 +17,10 @@
   - [3. Reading paper for Basic Path](#3-reading-paper-for-basic-path)
     - [3.1 First Pass](#31-first-pass)
     - [3.2 Second Pass](#32-second-pass)
+      - [legacy 802.11](#legacy-80211)
+      - [802.11E](#80211e)
+      - [Evaluation](#evaluation)
+      - [summary / conclusion](#summary--conclusion)
 
 
 ## 1. Five-minute presentation
@@ -202,7 +206,90 @@ The structure seems coherent and logical. Just by skimming the article I got a g
 
 
 ### 3.2 Second Pass
+*short summary of the main points in the paper, based upon my understanding of the material*
 
+#### legacy 802.11
+
+legacy 802.11 uses a CSMA/CA concept
+
+To enable QoS Support it uses Point Coordination Function (PCF), which allows for time-bound QoS services centrally controled by the point Coordinator (CP; often the AP).
+
+This implementation has it's limitations. It uses a Target beacon transmission time (TBTT) to sync the timers of the stations and tramsit protocol deliverd information (through beacon frames).  
+But because the CP needs to wait for the channel to be idle and a PIFS (shorter wait time than a normal transmission, i.e. DIFS -> DIFS > PIFS), delays between the actual time and the TBTT can occur. This then may lead to the QoS to be affected.
+
+Besides that the transmision time for polled stations (by PCF) isn't known and therefore out of the control of the CP, which may affect QoS for other stations.
+
+#### 802.11E
+
+hybrid coordination funciton (HCF) 
+- contention-based channel acess (enhanced distributed channel access - EDCA)
+- controlled channel access (HCF controlled channel access - HCCA)
+
+differentiate between CP and CFP (Contention Phase and Contention Free Phase) as in legacy 802.11
+
+**Imporvements over legacy 802.11**
+
+- backoff entity must not utilize radio ressources for a duration longer than a specified limit (transmission opportunity - TXOP)
+  - during CP -> EDCA-TXOPS  
+    limited by QBSS wide paramter *TXOP-limit*
+  - during CFP -> HCCA-TXOP
+- no backoff entity transmits across TBTT -> better control for HC
+- backoff entity can transmit to another backoff entity without communcating with AP (Direct link protocl - DLP)
+
+
+**HCF contention-based medium access**
+
+QoS support in EDCA
+
+access categories (AC) -> prioritization through AC-specific contention paramters
+1. AC_VO (voice)
+2. AC_VI (video)
+3. AC_BE (best effort)
+4. AC_BK (background)
+paramteres for ACs are defined by HC 
+
+each entity start countint don the backoff-counter, after medium is idle by the Arbitration interfrae space (AIFS[AC]; AIFS[AC]$\geq$DIFS)
+can be increased by arbitration interfram space number (AIFSN[AC])
+
+$AIFS[AC] = SIFS + AIFSN[AC] \cdot aSlotTime, \;\; AIFSN[AC]\geq2$
+
+AIFS[AC] should be equal to DIFS
+
+Contention Window is dependent on AC (CWmin[AC])
+
+
+QoS Support in HCCA
+
+only HC can sen CF-Poll or transmit Downlink Data
+only HC can allocate TXOPs
+
+
+**Improved Efficiency**
+Block acknowledgment: allows multiple MPUDUs to be transmitted with only one ACK
+Direct Link Protocol (DLP): backoff entitiies can communication in a QBSS directlyo
+
+#### Evaluation
+
+
+event-driven stochastic model
+
+ thorughpout in an isolated QBSS with four stations
+-> shows that the priority system works, i.e. the data with higher priority retains the throughpout 
+
+
+avialabe edca throughpout with increasing number of stations
+
+Qos for edcas mdium access in isolated qbss
+throughput is reduced more quickly and also in the AC_VO, because of lower CW_min and CW_ma
+
+
+QoS guarantess with prioriized access of HC
+HCCA delays stay more consistent and lower than EDCS
+
+
+
+#### summary / conclusion
+overlapping QBSS problem reaims to be resolved?
 
 
 
