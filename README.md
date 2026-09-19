@@ -41,7 +41,7 @@ have an LLM review it, and commit the feedback.
 - [Assignment Information](https://hackmd.io/jOXxNllMRY-hr_C1fQct6w#A1-%E2%80%94-Background-Study-Notes)
 - Submissions:
   - [ ] [Study Note](A1-background/study-note.md) — five-minute presentation, how to read a paper, and your project proposal
-  - [ ] [Slides](A1-background/slides/slides.pptx)
+  - [ ] [Slides](A1-background/slides/slides.pdf)
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback) — Speaker Coach recording and the LLM review <!-- TODO -->
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
 
