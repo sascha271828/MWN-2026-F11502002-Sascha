@@ -10,6 +10,7 @@
     - [A3 — Literature Review](#a3--literature-review)
     - [A4 — Baseline Reproduction](#a4--baseline-reproduction)
     - [Final Project — Your Modification](#final-project--your-modification)
+  - [Other Ressources](#other-ressources)
 
 ## 1. Profile
 
@@ -43,7 +44,7 @@ have an LLM review it, and commit the feedback.
   - [x] [Study Note](A1-background/study-note.md) — five-minute presentation, how to read a paper, and your project proposal
   - [x] [Slides](A1-background/slides/slides.pdf)
   - [x] [Rehearsal Presentation](A1-background/rehearsal_feedback/rehearsal_feedback.pdf)
-  - [x] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
+  - [ ] [Peer Review](https://forms.gle/5GRYBEh66qm3YCEi9)
 
 ### A2 — ns-3 Setup & First Scenario
 
@@ -85,6 +86,8 @@ have an LLM review it, and commit the feedback.
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
 
 
+## Other Ressources
+[Table Github Repositories](https://docs.google.com/spreadsheets/d/1fXZFlqAVBu5hN1gxSf0nlLqcO8B_4EyAUWeowHog7hI/edit?gid=0#gid=0)
 
 
 

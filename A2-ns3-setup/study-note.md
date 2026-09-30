@@ -60,7 +60,7 @@ $ cd ns-allinone-3.48/ns-3.48/
 $ ./ns3 configure --enable-examples --enable-tests
 ```
 
-![output after configuration for test-build ](doc/02_first_build.png)
+![output after configuration for test-build ](doc/02_first_configuration.png)
 
 ```
 $ ./ns3 build
