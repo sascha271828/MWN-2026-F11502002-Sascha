@@ -32,7 +32,7 @@ have an LLM review it, and commit the feedback.
 | Assignment | Due & presented | Time |
 | :--------- | :-------------- | :--- |
 | [A1](#a1--background-study-notes) | Week 3 · 9/22 | 5 min |
-| [A2](#a2--ns-3-setup--first-scenario) | Week 7 · 10/20 | 10 min |
+| [A2](#a2--ns-3-setup--first-scenario) | Week 6 · 10/13 | 10 min |
 | [A3](#a3--literature-review) | Week 11 · 11/10 | 10 min |
 | [A4](#a4--baseline-reproduction) | Week 13 · 12/1 | 15 min |
 | [Final Project](#final-project--your-modification) | Week 15 *(basic)* / Week 16 *(advanced)* | 20 min |
@@ -44,7 +44,7 @@ have an LLM review it, and commit the feedback.
   - [x] [Study Note](A1-background/study-note.md) — five-minute presentation, how to read a paper, and your project proposal
   - [x] [Slides](A1-background/slides/slides.pdf)
   - [x] [Rehearsal Presentation](A1-background/rehearsal_feedback/rehearsal_feedback.pdf)
-  - [ ] [Peer Review](https://forms.gle/5GRYBEh66qm3YCEi9)
+  - [x] [Peer Review](https://forms.gle/5GRYBEh66qm3YCEi9)
 
 ### A2 — ns-3 Setup & First Scenario
 
