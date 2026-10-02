@@ -4,6 +4,7 @@
     - [1.1 Prerequisits](#11-prerequisits)
     - [1.2 installation](#12-installation)
     - [1.3 building and testing](#13-building-and-testing)
+      - [1.3.1 Running an example script](#131-running-an-example-script)
   - [2. First Scenario](#2-first-scenario)
 
 
@@ -55,23 +56,44 @@ $ tar -xjf ./Downloads/ns-allinone-3.48.tar.bz2
 $ cd ns-allinone-3.48/ns-3.48/
 ```
 
+additionally Wireshark was installed thorugh the default Fedora package manger
+```
+sudo dnf install wireshark
+```
 ### 1.3 building and testing
+Configuration from the installation guide:
 ```
 $ ./ns3 configure --enable-examples --enable-tests
 ```
 
 ![output after configuration for test-build ](doc/02_first_configuration.png)
 
+first build:
 ```
 $ ./ns3 build
 ```
 ![first build](doc/03_first_build.png)
 
 
-<!--TODO: continue on page 7 of installation guide-->
+Running Unit Test:
+```
+$ ./test.py
+```
+
+![unit test 1](doc/04_unit_test_1.png)
+![unit test 2](doc/04_unit_test_2.png)
 
 
 
+#### 1.3.1 Running an example script
+
+Using the provided traffic-control example
+```
+$ ./ns3 run examples/traffic-control/traffic-control-example.cc
+```
+
+![traffic control example](doc/05_traffic_control_example.png)
+I found no documented expected output for the provided examples, so I gave Claude the example code and output to confirm. According to the Opus 5.5 Model the output is within the expectations, which confirms that the installation was successfull. 
 
 
 
