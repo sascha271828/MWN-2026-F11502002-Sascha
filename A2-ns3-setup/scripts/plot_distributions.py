@@ -5,11 +5,11 @@ definition (3GPP TR 26.926 cl. 6.5.3 / TR 38.838) and plot the network delay.
 
 Reads <results>/config.txt and the CSV traces written by xr-wifi.cc, then writes
 into <results>/plots/:
-  frame_size.pdf      PDF + CDF of the frame size, model overlay
-  jitter.pdf          PDF + CDF of the jitter (actual minus nominal time)
-  inter_arrival.pdf   PDF + CDF of the frame inter-arrival time, model overlay
-  packet_size.pdf     PMF + CDF of the UDP payload size, model overlay
-  delay_cdf.pdf       CDF of the per packet one way delay (receiver side)
+  frame_size.png      PDF + CDF of the frame size, model overlay
+  jitter.png          PDF + CDF of the jitter (actual minus nominal time)
+  inter_arrival.png   PDF + CDF of the frame inter-arrival time, model overlay
+  packet_size.png     PMF + CDF of the UDP payload size, model overlay
+  delay_cdf.png       CDF of the per packet one way delay (receiver side)
   stats.md            model vs measured statistics incl. KS tests
 
 Usage:
@@ -111,7 +111,7 @@ def main():
     # ---- 1) frame size
     x = np.linspace(M - s_bnd, M + s_bnd, 600)
     pdf_cdf_figure(f.size_B, x, size_rv.pdf(x), size_rv.cdf(x), "frame size [byte]",
-                   "Frame size", out / "frame_size.pdf")
+                   "Frame size", out / "frame_size.png")
     ks_s = stats.kstest(f.size_B, size_rv.cdf)
     rows += [("frame size [B]", "mean", size_rv.mean(), f.size_B.mean()),
              ("frame size [B]", "std", size_rv.std(), f.size_B.std()),
@@ -123,7 +123,7 @@ def main():
     jit = (f.time_s - f.nominal_s) * 1e3
     xj = np.linspace(-j_bnd, j_bnd, 600)
     pdf_cdf_figure(jit, xj, jit_rv.pdf(xj), jit_rv.cdf(xj), "jitter [ms]", "Jitter",
-                   out / "jitter.pdf")
+                   out / "jitter.png")
     ks_j = stats.kstest(jit, jit_rv.cdf)
     rows += [("jitter [ms]", "mean", 0.0, jit.mean()),
              ("jitter [ms]", "std", jit_rv.std(), jit.std()),
@@ -137,7 +137,7 @@ def main():
     xd = np.arange(len(conv)) * dx - 2 * j_bnd + T
     cdf_d = np.clip(np.cumsum(conv) * dx, 0, 1)
     pdf_cdf_figure(ia, xd, conv, cdf_d, "inter-arrival time [ms]", "Frame inter-arrival",
-                   out / "inter_arrival.pdf")
+                   out / "inter_arrival.png")
     d_ia, p_ia = ks_numeric(ia, xd, cdf_d)
     rows += [("inter-arrival [ms]", "mean", T, ia.mean()),
              ("inter-arrival [ms]", "std", np.sqrt(2) * jit_rv.std(), ia.std()),
@@ -177,7 +177,7 @@ def main():
     for a in (a1, a2):
         a.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
-    fig.savefig(out / "packet_size.pdf", bbox_inches="tight")
+    fig.savefig(out / "packet_size.png", bbox_inches="tight")
     plt.close(fig)
     rows += [("packet size [B]", f"share of {P} B", pmf[P] / sum(pmf.values()),
               (p.size_B == P).mean()),
@@ -198,7 +198,7 @@ def main():
     ax.legend(loc="lower right")
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
-    fig.savefig(out / "delay_cdf.pdf", bbox_inches="tight")
+    fig.savefig(out / "delay_cdf.png", bbox_inches="tight")
     plt.close(fig)
 
     # ---- stats table

@@ -50,9 +50,9 @@ have an LLM review it, and commit the feedback.
 
 - [Assignment Information](https://hackmd.io/jOXxNllMRY-hr_C1fQct6w#A2-%E2%80%94-ns-3-Setup-amp-Traffic-Model)
 - Submissions:
-  - [ ] [Study Note](A2-ns3-setup/study-note.md) — ns-3 version, platform, install steps, what broke
-  - [ ] [Source code + run command](A2-ns3-setup/study-note.md#2-first-scenario) for your simple scenario
-  - [ ] [Result from your own run](path to specific section in your study note) — numbers, trace, or a Wireshark capture
+  - [x] [Study Note](A2-ns3-setup/study-note.md) — ns-3 version, platform, install steps, what broke
+  - [x] [Source code + run command](A2-ns3-setup/study-note.md#2-first-scenario) 
+  - [x] [Result from my run](A2-ns3-setup/study-note.md#24-results)
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
 
