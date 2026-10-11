@@ -4,7 +4,6 @@
   - [2. First Scenario](#2-first-scenario)
     - [2.1 Run commands](#21-run-commands)
     - [2.2 Analyzing](#22-analyzing)
-    - [3.3 wireshark](#33-wireshark)
 
 
 
@@ -64,8 +63,6 @@ deactivate
 ![Plot of First Run of Scenario](doc/07_scenario_run1_plot.png)
 
 
-### 3.3 wireshark
 
-Wireshark from the first run [source](results/run1/xr-wifi-ap-0-0.pcap)
 
 
