@@ -15,5 +15,5 @@ Flow `dl_sta0`, config: R=10.0 Mbit/s, F=60.0 fps, E=2, run=1
 | inter-arrival [ms] | KS D (p) |  | 0.0144 (0.73) |
 | packet size [B] | share of 1472 B | 0.8681 | 0.8681 |
 | packets per frame | mean | 7.576 | 7.571 |
-| delay dl_sta0 [ms] | mean / p95 / max |  | 1.285 / 2.344 / 4.146 |
-| delay ul_sta0 [ms] | mean / p95 / max |  | 0.378 / 1.974 / 5.153 |
+| delay dl_sta0 [ms] | mean / p95 / max |  | 1.286 / 2.344 / 5.314 |
+| delay ul_sta0 [ms] | mean / p95 / max |  | 0.379 / 1.974 / 6.321 |

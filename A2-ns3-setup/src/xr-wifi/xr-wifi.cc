@@ -259,6 +259,10 @@ main(int argc, char* argv[])
     NetDeviceContainer apDev = wifi.Install(phy, mac, apNode);
 
     // ------------------------------------------------------------ IP
+    // The first frame (about 8 fragments) is sent before ARP has resolved the
+    // destination. The default ARP pending queue holds only 3 packets, the
+    // rest would be dropped. 64 covers the largest possible frame.
+    Config::SetDefault("ns3::ArpCache::PendingQueueSize", UintegerValue(64));
     InternetStackHelper stack;
     stack.Install(apNode);
     stack.Install(staNodes);

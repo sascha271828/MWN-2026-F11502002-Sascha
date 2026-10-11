@@ -4,6 +4,7 @@
   - [2. First Scenario](#2-first-scenario)
     - [2.1 Run commands](#21-run-commands)
     - [2.2 Analyzing](#22-analyzing)
+    - [3.3 wireshark](#33-wireshark)
 
 
 
@@ -40,6 +41,13 @@ ln -s ~/projects/MWN-2026-F11502002-Sascha/A2-ns3-setup/src/xr-wifi \
 ![First Run of Scenario](doc/06_scenario_run1.png)
 
 
+for further runs change the run number, so a diffrent a diffrent number is chosen (fixed seed)
+```
+~/ns-allinone-3.48/ns-3.48/ns3 run "xr-wifi --enableUplink=true --simTime=20 --run=2 --outDir=$HOME/projects/MWN-2026-F11502002-Sascha/A2-ns3-setup/results/run2"
+```
+
+
+
 ### 2.2 Analyzing
 
 I also setup a venv to isolate the python dependencies
@@ -55,5 +63,9 @@ deactivate
 
 ![Plot of First Run of Scenario](doc/07_scenario_run1_plot.png)
 
+
+### 3.3 wireshark
+
+Wireshark from the first run [source](results/run1/xr-wifi-ap-0-0.pcap)
 
 
