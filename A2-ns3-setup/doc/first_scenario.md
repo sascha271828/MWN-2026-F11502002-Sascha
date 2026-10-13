@@ -248,12 +248,11 @@ The PCAP of the AP (`xr-wifi-ap-0-0.pcap`, radiotap link type) was opened in Wir
 - Spacing of about 10 ms, as specified in TR 26.926 clause 5.9.2.
 - Received signal -52 dBm, noise -94 dBm (SNR 42 dB): the link has a large margin, so losses are not expected.
 
-**I/O graph**, 1 ms bins, filter `wlan.qos.tid == 5` (orange) against all packets (black):
+**I/O graph**, 5 us bins, DL video (filter `wlan.qos.tid == 5`; green) and UL pose (`wlan.qos.tid == 6`; red):
 
 ![Wireshark I/O graph](10_wireshark_io_graph.png)
 
 - Bursts recur roughly every 8.33 ms, slightly irregular because of the jitter: the eye buffer structure of the traffic model is visible on the air.
-- "All packets" is about twice the filtered curve because every data frame is followed by an ACK. The small peaks without an orange counterpart are pose frames with their ACKs.
 - At most 3 to 4 data frames per millisecond, consistent with the 312 µs per frame exchange derived below.
 
 ### 6.3 Plausibility check with an airtime model

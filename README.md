@@ -52,8 +52,8 @@ have an LLM review it, and commit the feedback.
 - Submissions:
   - [x] [Study Note](A2-ns3-setup/study-note.md) — ns-3 version, platform, install steps, what broke
   - [x] [Source code + run command](A2-ns3-setup/study-note.md#2-first-scenario) 
-  - [x] [Result from my run](A2-ns3-setup/study-note.md#24-results)
-  - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
+  - [x] [Result from run](A2-ns3-setup/study-note.md#24-results)
+  - [ ] [Presentation](A2-ns3-setup/slides/F11502002-Sascha-slides.pdf) — [Feedback] 
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
 
 ### A3 — Literature Review
