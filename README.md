@@ -21,6 +21,7 @@
 5. Path: Basic — 802.11e reproduction 
 6. Topic: 802.11e EDCA prioritisation under a realistic multimedia traffic model
 
+
 ## 2. Assignments
 
 Every assignment is due **08:00 A.M. on the morning of its presentation** and is graded the
@@ -61,7 +62,7 @@ have an LLM review it, and commit the feedback.
 - [Assignment Information](https://hackmd.io/jOXxNllMRY-hr_C1fQct6w#A3-%E2%80%94-Literature-Review)
 - Submissions:
   - [ ] [Study Note](A3-literature-review/study-note.md) — per paper: problem / importance / challenges, system model (environment, I/Ps, O/Ps, metrics), experimental settings for ns-3
-  - [ ] [Revised project proposal](path to specific section in your study note) — what changed from A1 and why
+  - [ ] [Revised project proposal](A3-literature-review/doc/revised-project-proposal.md) — what changed from A1 and why
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
   - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
 
