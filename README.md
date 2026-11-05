@@ -55,16 +55,16 @@ have an LLM review it, and commit the feedback.
   - [x] [Source code + run command](A2-ns3-setup/study-note.md#2-first-scenario) 
   - [x] [Result from run](A2-ns3-setup/study-note.md#24-results)
   - [x] [Presentation](A2-ns3-setup/slides/F11502002-Sascha-slides.pdf) — [Feedback](A2-ns3-setup/doc/feedback.md)
-  - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
+  - [x] Peer Review (during class)
 
 ### A3 — Literature Review
 
 - [Assignment Information](https://hackmd.io/jOXxNllMRY-hr_C1fQct6w#A3-%E2%80%94-Literature-Review)
 - Submissions:
-  - [ ] [Study Note](A3-literature-review/study-note.md) — per paper: problem / importance / challenges, system model (environment, I/Ps, O/Ps, metrics), experimental settings for ns-3
-  - [ ] [Revised project proposal](A3-literature-review/doc/revised-project-proposal.md) — what changed from A1 and why
+  - [x] [Study Note](A3-literature-review/study-note.md) — per paper: problem / importance / challenges, system model (environment, I/Ps, O/Ps, metrics), experimental settings for ns-3
+  - [x] [Revised project proposal](A3-literature-review/doc/revised-project-proposal.md) — what changed from A1 and why
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
-  - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
+  - [ ] Peer Review (during class)
 
 ### A4 — Baseline Reproduction
 
@@ -74,7 +74,7 @@ have an LLM review it, and commit the feedback.
   - [ ] [Flowchart + source code for simulation and analysis](path to your src/)
   - [ ] [Numerical results](path to specific section in your study note) — plotted against the paper's figure, with parameters, seeds and run count
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
-  - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
+  - [ ] Peer Review (during class)
 
 ### Final Project — Your Modification
 
@@ -84,7 +84,7 @@ have an LLM review it, and commit the feedback.
   - [ ] [Flowchart + source code](path to your src/) for the modification
   - [ ] [Results vs. baseline](path to specific section in your report)
   - [ ] [Rehearsal Presentation](path to recording + LLM feedback)
-  - [ ] [Peer Review](https://forms.gle/eGE2JJgjXpCXwqfq7)
+  - [ ] Peer Review (during class)
 
 
 ## Other Ressources
