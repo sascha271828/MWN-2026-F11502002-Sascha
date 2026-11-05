@@ -2,6 +2,7 @@
 
 - [Literature Review](#literature-review)
   - [1 Analysis of IEEE 802.11e for QoS support in wireless LANs](#1-analysis-of-ieee-80211e-for-qos-support-in-wireless-lans)
+    - [1.1 Problem, importance, challenges, proposed method](#11-problem-importance-challenges-proposed-method)
     - [1.2 System model](#12-system-model)
     - [1.3 Experimental results](#13-experimental-results)
     - [1.4 ns-3 settings for Fig. 8](#14-ns-3-settings-for-fig-8)
@@ -27,6 +28,9 @@
 S. Mangold, Sunghyun Choi, G. R. Hiertz, O. Klein and B. Walke, "Analysis of IEEE 802.11e for QoS support in wireless LANs," in IEEE Wireless Communications, vol. 10, no. 6, pp. 40-50, Dec. 2003, doi: 10.1109/MWC.2003.1265851. 
 
 
+
+
+### 1.1 Problem, importance, challenges, proposed method
 
 **Problem:**\
 Legacy 802.11 offers no usable QoS. The DCF treats all traffic equally. The PCF is meant for time bounded traffic, but beacons can be delayed past the target beacon transmission time and the transmission time of a polled station is not under the control of the point coordinator, so delays are unpredictable.
@@ -169,9 +173,9 @@ The figures in the paper show:
 
 ### 1.5 What this means for my project
 
-1. **Fig. 8 is my A4 baseline.** Reading the paper again for the ns-3 settings corrected three points of my A1 proposal:
+1. **Fig. 8 is my A4 baseline.** Reading the paper again for the ns-3 settings corrected two points and clarified one point of my A1 proposal:
    - Fig. 8 is a load sweep: the offered traffic per AC is the x axis. The 250 kb/s per stream is the default rate and belongs to Fig. 9.
-   - For the Fig. 8 and Fig. 9 results all frames, including ACKs, are sent at 24 Mb/s
+   - For the Fig. 8 and Fig. 9 results all frames, including ACKs, are sent at 24 Mb/s.
    - Only the AP transmits data in Fig. 8. The figure therefore tests contention between the four ACs of one station (virtual collisions), not contention between stations.
 
 2. **Reproduction limits.** The simulator is not available, and simulation time, seeds, retry limit, MSDU lifetime and header sizes are not reported. ns-3 also needs beacons and will run without channel errors. I aim for a qualitative match (order and position of the drop of the lower ACs, AC_VO plateau). The models of Kong et al. and Huang and Liao with $N = 1$ can serve as an independent check of the saturated end of the curve.
@@ -208,7 +212,7 @@ An analytical model explains *why* EDCA differentiates and how each parameter ac
 
 **Challenges:**
 1. Each AC behaves as a virtual station, so the model must be per AC, and the ACs of one station are coupled through virtual collisions.
-2. Different AIFS values mean that a low priority AC can be frozen again before its AIFS has expired, so the freeze time depends on the other ACs causing dependencies.
+2. Different AIFS values mean that a low priority AC can be frozen again before its AIFS has expired, so the freeze time depends on the other ACs.
 3. EDCA decrements the backoff counter in the last slot of the AIFS, unlike the DCF 
 4. The retry limit (packet discard) must be included, which earlier models omitted.
 5. Mean access delay requires more than the stationary probabilities.
@@ -221,7 +225,7 @@ Each AC is modelled as its own discrete time Markov chain (one step per slot) wi
 
 The third dimension is what captures the AIFS freeze and the EDCA countdown rule. The chains of all ACs and stations are coupled through the collision probability $p_i$ of AC $i$ and the channel busy probability $p_b$, solved by a numerical fixed point. Throughput and a recursively computed mean access delay follow from the stationary distribution.
 
-The equations I may need later for an analytical cross-check (taken form the paper):
+The equations I may need later for an analytical cross-check (taken from the paper):
 
 | Equation | Meaning | in the paper |
 | :--- | :--- | :--- |
@@ -259,7 +263,7 @@ one BSS, 802.11b like PHY at 11 Mb/s, validated with ns-2
 **Outputs:**
 - $\tau_i$: probability that AC $i$ transmits in a randomly chosen slot
 - $p_i$: collision probability of AC $i$
-- - $p_b$: probability that the channel is busy in a slot
+- $p_b$: probability that the channel is busy in a slot
 - Normalized throughput $S_i$ 
 - Mean access delay per AC
 
@@ -299,7 +303,7 @@ flowchart LR
 AC1 = low priority, AC3 = high priority;
 Two saturated ACs per station 
 
-| Paramter | Value |
+| Parameter | Value |
 | --- | --- |
 | Payload Size | 1000 bytes |
 | PHY Header (incl. preamble) | 192 bits|
@@ -309,7 +313,7 @@ Two saturated ACs per station
 | ACK Frame | PHY Header + 112 bits |
 | CTS_Timeout | DIFS + CTS |
 | ACK_Timeout | DIFS + ACK |
-| Data Rate | 11 Mbpts |
+| Data Rate | 11 Mbps |
 | Time Slot | 20 µs |
 | SIFS | 1 Time Slot |
 | AIFS[AC3] | 3 Time Slots |
@@ -346,11 +350,10 @@ The model captures EDCA differentiation, and the high priority load has to be li
 
 ### 2.5 What this means for my project
 
-1. **Not a reproduction target.** Table I gives the PHY header as 192 bits (fixed offset) while ns-3 uses reats PHY headers as modular byte streams (implements the actual standard).
-Therefore the absolute numbers will differ.
+1. **Not a reproduction target.** Table I gives the PHY header only in bits and uses SIFS = 20 µs. ns-3 implements the standard 802.11b PHY: the preamble and PLCP header are sent at 1 Mb/s (192 µs) and SIFS is 10 µs. The frame timing therefore differs, and so will the absolute numbers.
 Simulation time, seeds and the ns-2 EDCA module are not reported either. I will use the paper as a qualitative reference, not as a baseline.
 
-2. **Possible analytical cross-check.** In Fig. 8 of Mangold et al. the AP is the only transmitter. With $M = 1$ the model reduces to virtual collisions between the four ACs of one station. Fed with the ns-3 frame durations, it gives an independent prediction of the saturated end of Fig. 8. Whether I use this model for the final report is still open.
+2. **Possible analytical cross-check.** In Fig. 8 of Mangold et al. the AP is the only transmitter. With $M = 1$ the model reduces to virtual collisions between the four ACs of one station. Fed with the ns-3 frame durations, it gives an independent prediction of the saturated end of Fig. 8. 
 
 3. **What to expect in my results.** AIFS differentiation can starve AC_BE and AC_BK, and the high priority load determines what is left for them. 
 In the final project this is exactly what may change when AC_VI carries bursty 3GPP traffic instead of Poisson traffic.
@@ -554,7 +557,7 @@ The model accurately describes EDCA throughput, delay and jitter under saturatio
 
 ### 3.5 What this means for my project
 
-1. **Closer to the Mangold setup.** Same 802.11a timing, 24 Mb/s data, four ACs per station. If I do the analytical cross-check, this model is the simpler one to implement (two dimensional chain, explicit expressions for all probabilities). With $N = 1$ it reduces to virtual collisions only, as in Fig. 8 of Mangold et al. Fig. 6 is also a possible multi station validation of ns-3 EDCA, which is still optional.
+1. **Closer to the Mangold setup.** Same 802.11a timing, 24 Mb/s data, four ACs per station. If I do the analytical cross-check, this model is the simpler one to implement (two dimensional chain, explicit expressions for all probabilities). With $N = 1$ it reduces to virtual collisions only, as in Fig. 8 of Mangold et al. Fig. 6 is also a possible multi station validation of ns-3 EDCA.
 
 2. **Reproduction limits.** The backoff interval $[1, W]$ differs from the standard and simulation time, seeds and queue size are not reported. Fig. 6 can therefore be reproduced qualitatively; the absolute values may differ.
 

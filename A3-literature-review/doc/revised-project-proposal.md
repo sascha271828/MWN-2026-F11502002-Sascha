@@ -15,7 +15,7 @@
     - [3.3 Experiment Scenario 2: Analytical cross-check (A4)](#33-experiment-scenario-2-analytical-cross-check-a4)
     - [3.4 Experiment Scenario 3: 3GPP traffic on AC\_VI (final project)](#34-experiment-scenario-3-3gpp-traffic-on-ac_vi-final-project)
   - [4 Cross-Validation](#4-cross-validation)
-- [Changes since the A1 proposal](#changes-since-the-a1-proposal)
+  - [5 Changes since the A1 proposal](#5-changes-since-the-a1-proposal)
 
 
 Structure taken from the sample planning template. 
@@ -34,12 +34,6 @@ References: [P1] Mangold et al. 2003, [P2] Kong et al. 2004, [P3] Huang and Liao
 
 
 ## 1. Project Abstract
-In 150–300 words, describe:
-- **Problem being solved:**
-- **Challenges of this problem:**
-- **Planned approach / methods:**
-- **Expected final deliverable:**
-
 **Problem to be solved:**\
 Mangold et al. [P1] show in Fig. 8 that EDCA restrains lower access categories in favour of higher ones as the offered load rises. 
 The result is obtained with memoryless traffic: 512 byte MSDUs with exponential inter-arrival times. 
@@ -57,7 +51,7 @@ Reproduce Fig. 8 in ns-3 with the settings of [P1]. Check the saturated end agai
 Then replace the AC_VI Poisson streams with a TR 26.926 model and sweep its mean rate along the same axis, with TXOP limit 0 and the ns-3 default as two variants.
 
 **Expected outcomes:**\
- A documented ns-3 baseline that matches Fig. 8 qualitativly, an analytical cross-check, and a quantified comparison of throughput share, access delay, jitter, frame delay and loss per AC between Poisson and 3GPP traffic.
+ A documented ns-3 baseline that matches Fig. 8 qualitatively, an analytical cross-check, and a quantified comparison of throughput share, access delay, jitter, frame delay and loss per AC between Poisson and 3GPP traffic.
 
 
 
@@ -165,8 +159,7 @@ flowchart LR
 - **Design:** Fig. 8 of [P1]. 12 downlink flows, Poisson, 512 byte MSDUs, Table 1 parameters, one frame per TXOP, all frames at 24 Mb/s. Sweep $x$ from 0 to 30 Mb/s per AC.
 - **Baseline:** Fig. 8, digitised.
 - **Purpose:** confirm that the ns-3 EDCA reproduces the order and position of the collapse of the lower ACs and the AC_VO plateau.
-- **Expected result:** qualitative match (order BK, BE, VI) and saturated total throughput close to the airtime bound of ≈ 13.9 Mb/s; plateau values within a tolerance to be fixed after the first runs.
-
+- **Expected result:** qualitative match (order BK, BE, VI) and saturated total throughput close to Fig. 8
 ### 3.3 Experiment Scenario 2: Analytical cross-check (A4)
 
 - **Design:** the saturated end of Scenario 1 ($x$ = 30 Mb/s, all four ACs backlogged). Implement the model of [P2] or [P3] for $N$ = 1 (virtual collisions only, $PO = 0$), using the ns-3 frame durations and the ns-3 backoff interval $[0, W]$.
@@ -195,17 +188,17 @@ flowchart LR
 
 
 
-# Changes since the A1 proposal
+## 5 Changes since the A1 proposal
 
 | # | A1 | A3 | Why |
 | :-- | :--- | :--- | :--- |
 | 1 | Fig. 8 with 250 kb/s per stream | Fig. 8 is a load sweep, 0 to 30 Mb/s per AC; 250 kb/s belongs to Fig. 9 | Found while extracting the ns-3 settings from [P1] (x axis of Fig. 8) |
 | 2 | Data 24 Mb/s, control 6 Mb/s | All frames at 24 Mb/s for Fig. 8 | Stated in [P1] for the Fig. 8 and Fig. 9 sections; only the 24 Mb/s ACK is compatible with the ≈ 14.1 Mb/s total at overload (airtime bound) |
-| 3 | Fig. 8 implicitly read as contention between stations | Fig. 8 is a single transmitter: only virtual collisions inside the AP | [P1] text; makes clear what the baseline tests and why the AP downlink XR stream fits |
+| 3 | Not stated which collisions Fig. 8 involves | Fig. 8 has a single transmitter: only virtual collisions inside the AP | [P1] text; makes clear what the baseline tests and why the AP downlink XR stream fits |
 | 4 | "Different simulators" as an open question | Analytical cross-check (Scenario 2) and airtime bound added | [P2], [P3] provide EDCA models that work for $N$ = 1 and do not depend on the original simulator |
 | 5 | Metrics: throughput, delivery delay distribution, loss split by collision and lifetime | Plus MAC access delay and jitter as defined in [P3], frame level delay, loss split by retry limit and queue drops | [P3] separates MAC delay from queueing; with one transmitter there are no external collisions, so "collision loss" becomes retry limit loss; ns-3 implements lifetime as `MaxDelay` of the MAC queue |
 | 6 | Rate scaling open (scale down or raise the PHY rate) | Keep 24 Mb/s, sweep the mean rate of the 3GPP stream along the Fig. 8 axis | Makes the comparison point by point at equal mean load and keeps the paper's PHY |
-| 7 | TXOP not addressed | TXOP limit 0 in the baseline, default as a variant in the modification | All three papers assume one frame per TXOP; A2 showed TXOP bursting of XR fragments and pose packets waiting behind them |
+| 7 | One frame per TXOP in the baseline, TXOP not considered for the modification | TXOP limit 0 in the baseline, ns-3 default as a variant in the modification | All three papers assume one frame per TXOP; A2 showed TXOP bursting of XR fragments and pose packets waiting behind them |
 | 8 | Runs not specified | 10 runs per point, 95 % CI, half width ≤ 5 % | None of the papers reports seeds or run length; [P1] reports a 5 % relative error target |
 | 9 | Stream type open | Still open; the AC_VI slot is defined, the model is interchangeable | Kept open on purpose; the XR split rendering model of A2 is the implemented candidate |
 | 10 | Modification only on "high priority categories" | Modification on AC_VI only, AC_VO stays Poisson | Changing one AC keeps cause and effect separable; the AC_VO pose stream from A2 remains a possible extension |

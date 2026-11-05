@@ -4,7 +4,7 @@
   - [1 Overview](#1-overview)
   - [2 Literature Review](#2-literature-review)
   - [3 Revised Project Proposal](#3-revised-project-proposal)
-  - [4 Reflections on last Submission and Presentation / Considerations for future tests](#4-reflections-on-last-submission-and-presentation--considerations-for-future-tests)
+  - [4 Reflections on last Submission and Presentation / Considerations for A4](#4-reflections-on-last-submission-and-presentation--considerations-for-a4)
 
 ## 1 Overview
  
@@ -41,9 +41,15 @@ The baseline is now defined correctly (Fig. 8 is a load sweep, with all frames a
 The full proposal, including a table of all changes and their reasons, is in the [Revised Project Proposal](doc/revised-project-proposal.md).
  
  
-## 4 Reflections on last Submission and Presentation / Considerations for future tests
-:TODO check that the simulation is completly right -> look in wireshark to verify the cause of the delays
-:TODO maybe run another verification
-:TODO look up if separate transmission per side for XR is realisitc (other students assumed smae transmission)
-:TODO increase channel limit emporarily to check wheter simulaitons work (ran into saturations during the simulations -> Saturations is something I need to watch out for in general!)
- 
+
+## 4 Reflections on last Submission and Presentation / Considerations for A4
+
+The feedback on A2 and the presentation raised points about the correctness and the assumptions of my first scenario.
+They are not addressed in A3, because A3 is about the literature and the proposal.
+They will be addressed in A4, as part of the baseline reproduction, since the A4 simulation reuses the same setup and generator:
+
+1. **Verify the cause of the delays.** Check in Wireshark that the measured delays come from the expected mechanism (pose packets on AC_VO waiting behind AC_VI TXOP bursts) and not from a configuration error.
+2. **Repeat the verification.** Run the traffic model verification again on the extended generator (with exponential inter-arrival times added for the baseline), so that both the Poisson and the 3GPP traffic are checked against their models.
+3. **Eye buffer timing.** TR 26.926 allows both options, but its recommended configurations (Table 6.4-1) send both eye buffers at the same time, except VR2-6 (interleaved). A2 used the staggered variant. In A4, I switch the default to "same time" and keep staggered as a sensitivity variant, since it changes the burst size (2M every 1/F instead of M every 1/(2F)).
+4. **Saturation.** I ran into saturation during the A2 simulations. In A4, I will first check every scenario with a temporarily increased channel capacity (for example a higher PHY rate) to confirm that the simulation itself works. Then I will monitor queue drops and queue length in every run, so that saturation is always detected rather than mistaken for a protocol effect.
+
