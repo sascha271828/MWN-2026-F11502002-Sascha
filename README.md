@@ -63,7 +63,7 @@ have an LLM review it, and commit the feedback.
 - Submissions:
   - [x] [Study Note](A3-literature-review/study-note.md) — per paper: problem / importance / challenges, system model (environment, I/Ps, O/Ps, metrics), experimental settings for ns-3
   - [x] [Revised project proposal](A3-literature-review/doc/revised-project-proposal.md) — what changed from A1 and why
-  - [ ] [Slides](A3-literature-review/slides/mwn-a3-slides-sascha.pdf) — [Rehearsal Presentation] (path to recording); [Feedback](path to feedback)
+  - [x] [Slides](A3-literature-review/slides/mwn-a3-slides-sascha.pdf) — [Rehearsal Presentation](https://drive.google.com/file/d/1iZdzgpn-bNJtLhnK8veJ7EXSeiPtf0zu/view?usp=sharing), [Feedback](A3-literature-review/doc/feedback.md)
   - [ ] Peer Review (during class)
 
 ### A4 — Baseline Reproduction
