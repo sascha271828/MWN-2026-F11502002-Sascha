@@ -1,0 +1,5 @@
+tag,load_mbps,run,vi_model,ac,offered_mbps,throughput_mbps,tx_pkts,rx_pkts,mean_delay_ms,std_delay_ms,drop_queue,drop_lifetime,drop_retry,tx_frames,rx_frames,mean_frame_delay_ms,queue_pkts
+beacons-on,30,3,poisson,AC_VO,29.869261,11.180442,218769,81888,182.984761,3.462860,136882,0,0,218769,81388,182.982756,500
+beacons-on,30,3,poisson,AC_VI,30.038289,2.731349,220007,20005,495.836981,4.389270,189811,10184,7,220007,19690,495.914829,500
+beacons-on,30,3,poisson,AC_BE,30.133999,0.144725,220708,1060,419.273001,88.685453,192885,26761,2,220708,1041,418.841844,500
+beacons-on,30,3,poisson,AC_BK,30.108194,0.000000,220519,0,0.000000,0.000000,220519,0,0,220519,0,0.000000,500

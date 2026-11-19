@@ -1,0 +1,7 @@
+date=2026-11-19T15:12:37+08:00
+ns3=3.48
+seed=1
+measTime=30
+extra=
+runs=1 2 3
+loads=3.6 30

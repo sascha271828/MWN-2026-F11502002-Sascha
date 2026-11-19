@@ -1,0 +1,5 @@
+tag,load_mbps,run,vi_model,ac,offered_mbps,throughput_mbps,tx_pkts,rx_pkts,mean_delay_ms,std_delay_ms,drop_queue,drop_lifetime,drop_retry,tx_frames,rx_frames,mean_frame_delay_ms,queue_pkts
+retry-limit-4,30,3,poisson,AC_VO,29.869261,11.121459,218769,81456,183.966701,3.422228,137314,0,0,218769,80956,183.961538,500
+retry-limit-4,30,3,poisson,AC_VI,30.038289,2.733124,220007,20018,496.095325,3.882961,189835,9922,232,220007,19692,496.136171,500
+retry-limit-4,30,3,poisson,AC_BE,30.133999,0.230468,220708,1688,472.060947,29.540843,191080,27846,94,220708,1663,472.612485,500
+retry-limit-4,30,3,poisson,AC_BK,30.108194,0.000000,220519,0,0.000000,0.000000,220519,0,0,220519,0,0.000000,500

@@ -1,0 +1,5 @@
+tag,load_mbps,run,vi_model,ac,offered_mbps,throughput_mbps,tx_pkts,rx_pkts,mean_delay_ms,std_delay_ms,drop_queue,drop_lifetime,drop_retry,tx_frames,rx_frames,mean_frame_delay_ms,queue_pkts
+pilot,2.94912,4,burst-random,AC_VO,2.933146,2.933146,21483,21483,0.398250,0.196105,0,0,0,21483,21483,0.398250,500
+pilot,2.94912,4,burst-random,AC_VI,2.949120,2.948983,21600,21599,1.272462,0.760936,0,0,0,5400,5398,1.957281,500
+pilot,2.94912,4,burst-random,AC_BE,2.950758,2.950622,21612,21611,1.593399,1.615639,0,0,0,21612,21611,1.593399,500
+pilot,2.94912,4,burst-random,AC_BK,2.938880,2.938607,21525,21523,7.779455,7.992987,0,0,0,21525,21521,7.779769,500

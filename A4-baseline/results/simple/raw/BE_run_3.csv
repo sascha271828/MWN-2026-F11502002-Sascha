@@ -1,0 +1,5 @@
+tag,load_mbps,run,vi_model,ac,offered_mbps,throughput_mbps,tx_pkts,rx_pkts,mean_delay_ms,std_delay_ms,drop_queue,drop_lifetime,drop_retry,tx_frames,rx_frames,mean_frame_delay_ms,queue_pkts
+BE,30,3,poisson,AC_VO,0.000000,0.000000,0,0,0.000000,0.000000,0,0,0,0,0,0.000000,500
+BE,30,3,poisson,AC_VI,0.000000,0.000000,0,0,0.000000,0.000000,0,0,0,0,0,0.000000,500
+BE,30,3,poisson,AC_BE,29.869261,11.427157,218769,83695,179.029436,0.860157,135075,0,0,218769,83195,179.024250,500
+BE,30,3,poisson,AC_BK,0.000000,0.000000,0,0,0.000000,0.000000,0,0,0,0,0,0.000000,500
