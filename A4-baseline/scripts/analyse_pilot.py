@@ -192,7 +192,7 @@ def main():
 
     # ---------------------------------------------------------------- pilot_ccdf.png
     shown = ["AC_VO", "AC_VI"]
-    fig, axes = plt.subplots(len(shown), len(loads), figsize=(3.6 * len(loads), 6.4), dpi=150,
+    fig, axes = plt.subplots(len(shown), len(loads), figsize=(3.6 * len(loads), 6.4), dpi=900,
                              sharex=True, sharey=True, squeeze=False)
     for i, ac in enumerate(shown):
         for j, load in enumerate(loads):
@@ -207,19 +207,19 @@ def main():
             ax.set_xlim(0.1, 1000)
             style_axes(ax)
             if i == 0:
-                ax.set_title(f"{load:.2f} Mb/s per AC", fontsize=10, color=INK)
+                ax.set_title(f"{load:.2f} Mb/s per AC", fontsize=11, color=INK)
             if j == 0:
                 ax.set_ylabel(f"{ac}\nP(delay > x)", color=INK)
             if i == len(shown) - 1:
                 ax.set_xlabel("Packet delay x [ms]", color=INK)
     handles, labels = axes[0][0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False, fontsize=9,
+    fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False, fontsize=11,
                labelcolor=INK, bbox_to_anchor=(0.5, 0.955), title="Arrival process of AC_VI",
-               title_fontsize=9)
+               title_fontsize=13)
     fig.suptitle("Packet delay CCDF: AC_VI as Poisson source and as periodic bursts, same mean load",
-                 x=0.01, ha="left", fontsize=11, color=INK)
+                 x=0.01, ha="left", fontsize=15, color=INK, weight="bold")
     fig.text(0.01, 0.005, f"ns-3, pooled over {'/'.join(map(str, n_runs))} runs per curve, "
-             "source to sink delay, 50 µs bins", fontsize=8, color=MUTED)
+             "source to sink delay, 50 µs bins", fontsize=9, color=MUTED)
     fig.tight_layout(rect=(0, 0.02, 1, 0.9))
     fig.savefig(os.path.join(args.results, "pilot_ccdf.png"))
 

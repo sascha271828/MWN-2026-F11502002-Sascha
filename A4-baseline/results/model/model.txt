@@ -1,0 +1,6 @@
+rounds=400000
+seeds=1..10
+numpy=2.5.4
+t_data_us=204
+t_ack_us=28
+retry_limit=7

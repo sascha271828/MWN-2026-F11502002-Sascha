@@ -75,7 +75,7 @@ def main():
                             f"{sum(d['drop_retry']) / n:.0f}"])
 
     # ---------------------------------------------------------------- fig8.png
-    fig, ax = plt.subplots(figsize=(8, 5.6), dpi=150)
+    fig, ax = plt.subplots(figsize=(8, 5.6), dpi=900)
     ax.plot([0, 14], [0, 14], color=MUTED, lw=1, ls=(0, (2, 2)), zorder=1)
     for ac in ACS:
         if ac in ref:
@@ -95,18 +95,19 @@ def main():
                 Line2D([], [], color=INK, lw=1.2, ls=(0, (4, 3)), alpha=0.75,
                        label="Mangold et al., Fig. 8 (digitised)"),
                 Line2D([], [], color=MUTED, lw=1, ls=(0, (2, 2)), label="Total offer per AC")]
-    ax.legend(handles=handles, loc="center right", frameon=False, fontsize=9, labelcolor=INK)
+    ax.legend(handles=handles, loc="center right", frameon=False, fontsize=13, labelcolor=INK)
 
     n_runs = sorted({v[2] for v in summary.values()})
     ax.set_title("Throughput per AC with increasing offered traffic per AC\n"
                  f"ns-3 reproduction of Fig. 8, {'/'.join(map(str, n_runs))} runs per point",
-                 loc="left", fontsize=11, color=INK)
-    ax.set_xlabel("Offered traffic per AC (3 streams each) [Mb/s]", color=INK)
-    ax.set_ylabel("Throughput per AC (3 streams each) [Mb/s]", color=INK)
+                 loc="center", fontsize=15, color=INK, weight="bold")
+    ax.set_xlabel("Offered traffic per AC (3 streams each) [Mb/s]", color=INK, fontsize=13)
+    ax.set_ylabel("Throughput per AC (3 streams each) [Mb/s]", color=INK, fontsize=13)
     ax.set_xlim(-0.5, 31)
     ax.set_ylim(-0.3, 14)
     ax.set_xticks([0, 3, 6, 9, 12, 15, 18, 30])
     ax.set_yticks(range(0, 15, 2))
+    ax.tick_params(axis='both', which='major', labelsize=11)
     style_axes(ax)
     fig.tight_layout()
     fig.savefig(os.path.join(args.results, "fig8.png"))
