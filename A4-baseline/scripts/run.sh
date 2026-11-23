@@ -148,12 +148,26 @@ one() {
 export -f one
 export ROOT MEAS EXTRA
 
+CAM_MD5="$(md5sum src/wifi/model/channel-access-manager.cc | cut -d' ' -f1)"
 for exp in $EXPERIMENTS; do
     mkdir -p "$ROOT/$exp/raw"
+    # Existing runs are skipped. They must come from the same ns-3 build
+    # (stock or patched countdown rule), otherwise the sweep mixes two rules.
+    if ls "$ROOT/$exp/raw"/*.csv > /dev/null 2>&1; then
+        OLD_MD5="$(sed -n 's/^channel_access_manager_md5=//p' "$ROOT/$exp/sweep.txt" 2>/dev/null)"
+        if [[ "$OLD_MD5" != "$CAM_MD5" ]]; then
+            echo "ERROR: $ROOT/$exp/raw holds runs from another or an unknown ns-3 build" >&2
+            echo "  (channel-access-manager.cc md5 '${OLD_MD5:-not recorded}', now '$CAM_MD5')." >&2
+            echo "  Delete $ROOT/$exp/raw to start this sweep again." >&2
+            exit 1
+        fi
+    fi
     # record what was run, so that it can be repeated
     {
         echo "date=$(date -Iseconds)"
         echo "ns3=$(cat VERSION 2>/dev/null || echo unknown)"
+        # identifies the countdown rule: stock ns-3.48 or patches/legacy-countdown.patch
+        echo "channel_access_manager_md5=$CAM_MD5"
         echo "seed=1"
         echo "measTime=$MEAS"
         echo "extra=$EXTRA"

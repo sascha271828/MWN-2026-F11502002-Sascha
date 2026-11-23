@@ -1,5 +1,14 @@
 # <center>A4 — Baseline Reproduction</center>
 
+- [A4 — Baseline Reproduction](#a4--baseline-reproduction)
+  - [1 Overview](#1-overview)
+  - [2 Scenario and parameters](#2-scenario-and-parameters)
+  - [3 Flowchart and source code](#3-flowchart-and-source-code)
+  - [4 Validation](#4-validation)
+  - [5 Numerical results: Fig. 8 against the paper](#5-numerical-results-fig-8-against-the-paper)
+  - [6 Differences and their causes](#6-differences-and-their-causes)
+  - [7 Baseline for the final project: hypothesis and pilot](#7-baseline-for-the-final-project-hypothesis-and-pilot)
+
 
 ## 1 Overview
 
@@ -10,6 +19,7 @@ I reproduce **Fig. 8 of Mangold et al. (2003)** in ns-3.48: throughput per acces
 
 
 ## 2 Scenario and parameters
+
 
 
 | Parameter | Value | Source |
@@ -75,8 +85,11 @@ python scripts/verify_traffic.py --streams 3 --fps 60   # results/traffic/
 python scripts/analyse_pilot.py                         # results/pilot/
 ```
 
-first simulation run took 58 minutes
+first simulation run took 58 minutes\
 analysis scripts run took 4 minutes
+
+[source code ns-3](src/edca-fig8/)\
+[analysis scripts](A4-baseline/scripts/)
 
 ## 4 Validation
 
@@ -131,28 +144,38 @@ All 12 load points with confidence intervals: [results/fig8/comparison.md](resul
 
 | # | Difference | Cause | Evidence | Status |
 | :-- | :--- | :--- | :--- | :--- |
-| 1 | Overload (15 Mb/s and above): AC_VO 11.2 instead of 12.8, AC_VI 2.7 instead of 1.3, AC_BE 0.13 instead of 0 | Backoff countdown rule. ns-3 follows IEEE 802.11-2020: a waiting AC also counts down at the slot boundary at the end of its AIFS, so it gains one slot per busy period | With a DCF like countdown (one decrement per idle slot) the model gives 12.10 / 1.82 / 0.03, and a patched ns-3 gives 12.10 / 1.82 / 0.02 | Roughly half of the gap explained, the rest is open |
+| 1 | Overload (15 Mb/s and above): AC_VO 11.2 instead of 12.8, AC_VI 2.7 instead of 1.3, AC_BE 0.13 instead of 0 | Backoff countdown rule. ns-3 follows IEEE 802.11-2020: a waiting AC also counts down at the slot boundary at the end of its AIFS, so it gains one slot per busy period | With a DCF like countdown (one decrement per idle slot) the model gives 12.10 / 1.82 / 0.03, and a patched ns-3 gives 12.10 / 1.82 / 0.02 | 55 % (AC_VO) and 64 % (AC_VI) of the gap explained, the rest is open (see below) |
 | 2 | Knee of AC_VO at 12 Mb/s: 11.22 instead of 11.92 | Same as 1 | Patched ns-3: 11.97 | Explained |
-| 3 | AC_BK at 3.6 to 4.5 Mb/s: 2.04, 1.02, 0.91 instead of about 0 | Unknown. In the paper up to 3 Mb/s of capacity stay unused at these points although AC_BK has traffic, in ns-3 AC_BK uses them | Not the queue size, lifetime, retry limit or beacons (AC_BK stays at 2.05 ± 0.01 in all variants), not the countdown rule (1.93 at 3.6 Mb/s) | Not explained |
+| 3 | AC_BK at 3.6 to 4.5 Mb/s: 2.04, 1.02, 0.91 instead of about 0 | Unknown. In the paper up to 3 Mb/s of capacity stay unused at these points although AC_BK has traffic, in ns-3 AC_BK uses them | Not the queue size, lifetime, retry limit or beacons (AC_BK stays at 2.05 ± 0.01 in all variants), not the countdown rule (1.92 at 3.6 Mb/s) | Not explained (see below) |
 | 4 | AC_BE at 4.2 and 4.5 Mb/s: 3.77 and 3.37 instead of 4.19 and 4.16 | Consequence of 3: AC_BK still takes about 1 Mb/s | Sum of AC_BE and AC_BK: 4.79 and 4.28 in ns-3 | Follows from 3 |
 | 5 | Total at overload: 14.08 instead of 14.12 | Inside the accuracy of the digitisation | | No difference |
 | 6 | Radio channel error model in the paper, error free channel here | Unmodelled effect | Not tested | Open |
 
-The patched ns-3 is stock ns-3.48 with one statement removed ([patches/legacy-countdown.patch](patches/legacy-countdown.patch)), 3 runs per point: [results-legacy/fig8/rules.md](results-legacy/fig8/rules.md). The sensitivity runs are in [results/sens/sens.md](results/sens/sens.md).
+The patched ns-3 is stock ns-3.48 with one statement removed ([patches/legacy-countdown.patch](patches/legacy-countdown.patch)), 10 runs per point: [results-legacy/fig8/explained.md](results-legacy/fig8/explained.md).
+
+![How much of the difference the countdown rule explains](results-legacy/fig8/fig8_explained.png)
+
+The sensitivity runs are in [results/sens/sens.md](results/sens/sens.md).
 
 
 ```
 cd ~/ns-allinone-3.48/ns-3.48
 patch -p1 < ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/patches/legacy-countdown.patch
 cd ~/projects/MWN-2026-F11502002-Sascha/A4-baseline
-RUNS="1 2 3" ./scripts/run.sh fig8 results-legacy
+./scripts/run.sh fig8 results-legacy      # sweep.txt records the md5 of the patched file
 python scripts/plot_fig8.py --results results-legacy/fig8
-python scripts/compare_rules.py
+python scripts/compare_rules.py           # fails if the legacy sweep equals stock ns-3
+python scripts/plot_explained.py
 cd ~/ns-allinone-3.48/ns-3.48   # back to stock ns-3 before any other run
 patch -R -p1 < ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/patches/legacy-countdown.patch
 ```
  The paper itself states that the first countdown occurs at the end of AIFS, which is the rule of ns-3. I therefore cannot say which rule its simulator, based on a 2003 draft, actually applied or what else differs.
 
+**Remaining overload gap (row 1).** The split between AC_VO and AC_VI at overload depends on one-slot details of their arbitration. In the reference model, a single change of one slot reproduces the paper about as well as any other: AIFSN 3 for AC_VI gives 12.46 / 1.35 Mb/s, CWmin 15 for AC_VI with the legacy rule 12.58 / 1.31 Mb/s (paper 12.82 / 1.30, [results/model/variants.md](results/model/variants.md)). Several different details fit, so the paper's data cannot tell which one its simulator used. Channel errors can only be rare in the paper, since the total at overload agrees within 0.3 %.
+
+**AC_BK collapse (row 3).** At 3.68 Mb/s per AC the paper shows AC_BK at 0 while the other three ACs carry their offer, about 11 Mb/s in total. Each of these frames occupies the medium for at least 264 µs plus AIFS, so roughly a quarter of the time the medium is idle while AC_BK has frames queued. Every rule variant I tested lets AC_BK use this idle time. The paper's own AC_BK curve is also not monotonic: 0 at 3.7 to 4.6 Mb/s, then 0.30 at 6.1 Mb/s (ns-3: 0.26), then 0 again. A rule that starves AC_BK would starve it at 6 Mb/s as well. I therefore consider the zeros at 3.7 to 4.6 Mb/s a property of the reference (measurement or statistics), not of the EDCA rules; the paper does not report run length, warm up or how throughput is counted for an unstable queue.
+
+**PCAP.** Two traces of the AP (0.5 s measured, load 3.6 and 30 Mb/s per AC) are in [results/pcap/](results/pcap/). In both, the time between the starts of consecutive downlink data frames is always 264 µs + 9 µs · (AIFSN + remaining backoff), and no AC transmits before its AIFSN. Virtual collisions leave no trace on the air: only the winner transmits.
 
 
 ## 7 Baseline for the final project: hypothesis and pilot
@@ -200,14 +223,3 @@ Full tables with confidence intervals: [results/pilot/pilot.md](results/pilot/pi
 | H4 | In overload the frame loss is much higher than the packet loss | Share of incomplete frames |
 
 **Decision for the final project:** the stations send the uplink pose stream of A2 (AC_VO, 60 byte payload every 10 ms), so that the downlink bursts meet real collisions. This also follows the feedback that XR video without uplink pose data is unrealistic. H3 then becomes: the delay and loss of the pose stream do not change when AC_VI switches from Poisson to the 3GPP model at the same mean load. The option is already in the scenario (`--uplinkPose=true`, off by default, the A4 results are bit for bit the same with the new code). It has only been smoke tested, there are no results yet.
-
-
-
-## 8 Issues and lessons learned
-
-- **Lost streams without any MAC drop.** The ARP request of the AP travels through AC_BE. Once AC_VO and AC_VI are saturated it starves, the station is never resolved and a third or two thirds of all packets disappear above the MAC. Found through one run with a confidence interval 30 times wider than the others. Fixed with static ARP entries, and the analysis now refuses any run in which sent packets are neither delivered nor counted as dropped.
-- **The model was wrong first.** It gave AC_BE 0.109 instead of 0.125 Mb/s. ns-3 resets the contention window after 8 consecutive failures (retry counter, `Txop::UpdateFailedCw`), which I had left out.
-- **`ControlMode` does not set the ACK rate.** ns-3 derives it from the data rate. The single AC test confirms 24 Mb/s (28 µs ACK).
-- **A single run is not a verification.** In my first check 4 of 21 Poisson streams had p < 0.05. Over 105 streams the p-values are uniform.
-
-Points announced in A3: the traffic model verification is repeated for the Poisson mode (step 0), saturation is monitored in every run through the drop counters and the packet balance, and the eye buffer timing belongs to the 3GPP model of the final project. A PCAP check in Wireshark is prepared (`--pcapPrefix`) but not yet done.

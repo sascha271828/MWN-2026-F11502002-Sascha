@@ -36,6 +36,18 @@ def main():
     args = ap.parse_args()
 
     std, leg = read_summary(args.standard), read_summary(args.legacy)
+    # The two sweeps must come from different ns-3 builds. At saturation the
+    # rules differ by about 0.9 Mb/s for AC_VO, far outside the CIs (< 0.05).
+    # Identical results mean the patch was not active during the legacy sweep.
+    s30, l30 = std[(30.0, "AC_VO")], leg[(30.0, "AC_VO")]
+    # A sweep that mixes runs of both builds has a mean in between and a wide CI.
+    assert l30[1] < 0.1, (
+        f"AC_VO at 30 Mb/s in the legacy sweep: CI half width {l30[1]:.2f} Mb/s (expected "
+        "< 0.05). The sweep probably mixes stock and patched runs: delete results-legacy/fig8/raw "
+        "and run it again with the patch applied.")
+    assert abs(s30[0] - l30[0]) > 5 * (s30[1] + l30[1]), (
+        f"AC_VO at 30 Mb/s: standard {s30[0]:.2f}, legacy {l30[0]:.2f} Mb/s. The legacy sweep "
+        "looks like stock ns-3: was patches/legacy-countdown.patch applied?")
     ref = read_reference(args.reference)
     runs = lambda s: "/".join(map(str, sorted({v[2] for v in s.values()})))
 

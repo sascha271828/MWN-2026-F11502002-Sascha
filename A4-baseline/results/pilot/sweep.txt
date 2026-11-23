@@ -1,5 +1,6 @@
-date=2026-11-19T14:57:26+08:00
+date=2026-11-23T15:34:30+08:00
 ns3=3.48
+channel_access_manager_md5=f762e6c0309a638162d05321a1bf9a5a
 seed=1
 measTime=30
 extra=

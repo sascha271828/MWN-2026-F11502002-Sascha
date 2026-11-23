@@ -1,7 +1,8 @@
-date=2026-11-22T17:14:14+08:00
+date=2026-11-23T16:21:34+08:00
 ns3=3.48
+channel_access_manager_md5=f762e6c0309a638162d05321a1bf9a5a
 seed=1
 measTime=30
 extra=
-runs=1 2 3
+runs=1 2 3 4 5 6 7 8 9 10
 loads=1.5 3 3.6 4.2 4.5 6 7.5 9 12 15 18 30
