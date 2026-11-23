@@ -81,7 +81,7 @@ def main():
     ax.legend(handles=handles, loc="center right", frameon=False, fontsize=11, labelcolor=INK)
 
     ax.set_title("How much of the difference does the countdown rule explain?\n"
-                 f"ns-3 standard ({n_std} runs) and legacy countdown ({n_leg} runs) against Fig. 8",
+                 f"ns-3 standard and legacy countdown against Fig. 8",
                  loc="center", fontsize=15, color=INK, weight="bold")
     ax.set_xlabel("Offered traffic per AC (3 streams each) [Mb/s]", color=INK, fontsize=13)
     ax.set_ylabel("Throughput per AC (3 streams each) [Mb/s]", color=INK, fontsize=13)
