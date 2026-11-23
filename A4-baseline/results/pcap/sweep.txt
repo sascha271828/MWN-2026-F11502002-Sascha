@@ -1,0 +1,12 @@
+date=2026-11-23T17:36:16+08:00
+ns3=3.48
+channel_access_manager_md5=f762e6c0309a638162d05321a1bf9a5a
+profile=default
+compiler=/usr/bin/c++ c++ (GCC) 16.2.1 20261029 (Red Hat 16.2.1-3)
+seed=1
+measTime=30
+extra=
+runs=1
+loads=3.6 30
+warmup=0.2
+pcapMeasTime=0.5

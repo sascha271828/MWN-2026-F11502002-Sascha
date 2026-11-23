@@ -36,9 +36,23 @@ I reproduce **Fig. 8 of Mangold et al. (2003)** in ns-3.48: throughput per acces
 | Above the MAC | No queue disc, static ARP entries | My choice |
 | Load points | 1.5, 3, 3.6, 4.2, 4.5, 6, 7.5, 9, 12, 15, 18, 30 Mb/s per AC | Markers of Fig. 8 |
 | Timing | Sources start at 1 s, 1 s warm up, 30 s measured | Not in the paper |
-| Seed and runs | Seed 1, run numbers 1 to 10, fixed RNG streams (Wi-Fi from 100, sources from 1000) | Not in the paper |
+| Seed and runs | Seed 1, run number r per run (see the table below), fixed RNG streams (Wi-Fi from 100, sources from 1000, burst phases 900) | Not in the paper |
 | Statistics | Mean over the runs, 95 % Student t confidence interval | Paper: LRE, 5 % |
-| Software | ns-3.48,  g++ 13.3, Python 3.13, numpy 2.5.3, scipy 1.18.1, matplotlib 3.11.2 | |
+| Software | ns-3.48, optimized build. Build profile and compiler are recorded per experiment in `sweep.txt`, Python packages in [requirements.txt](../requirements.txt) | |
+
+| Experiment | Configurations | Runs per configuration | Measured per run |
+| :--- | :--- | ---: | ---: |
+| `fig8`: Fig. 8, stock ns-3 | 12 load points | 10 (run 1 to 10) | 30 s |
+| `fig8` in `results-legacy`: patched countdown rule | 12 load points | 10 (run 1 to 10) | 30 s |
+| `simple`: validation ladder | 7 cases, saturated (30 Mb/s per active AC) | 5 (run 1 to 5) | 30 s |
+| `sens`: unreported parameters | 7 variants at 3.6 and 30 Mb/s | 3 (run 1 to 3) | 30 s |
+| `traffic`: source verification | Poisson at 3 Mb/s per AC, bursts at 5.9 Mb/s | 8 and 1 | 30 s |
+| `pilot`: burstiness | 3 arrival processes at 2.95, 5.90, 8.85 Mb/s | 10 (run 1 to 10) | 30 s |
+| `pcap`: AP traces | 3.6 and 30 Mb/s | 1 (run 1) | 0.5 s |
+| Reference model | 7 AC subsets, 2 countdown rules | 10 seeds (numpy), 400 000 frame exchanges each | |
+| Model variants | 8 rule variants | 3 seeds, 150 000 frame exchanges each | |
+
+Every ns-3 result is repeatable bit for bit from (seed 1, run number, arguments), which `run.sh` records in `sweep.txt` next to the raw CSV files.
 
 
 ## 3 Flowchart and source code
@@ -46,7 +60,7 @@ I reproduce **Fig. 8 of Mangold et al. (2003)** in ns-3.48: throughput per acces
 ```mermaid
 flowchart TD
   subgraph RUN["scripts/run.sh"]
-    R1["Job list per experiment:<br/>fig8, simple, sens, pilot, traffic"] --> R2["Parallel runs,<br/>one CSV per run"]
+    R1["Job list per experiment:<br/>fig8, simple, sens, pilot, traffic, pcap"] --> R2["Parallel runs,<br/>one CSV per run"]
   end
   subgraph SIM["src/edca-fig8/edca-fig8.cc: one run"]
     S1["Arguments: load per AC, run number,<br/>arrival process of AC_VI"] --> S2["Seed 1, run r, fixed RNG streams"]
@@ -60,12 +74,15 @@ flowchart TD
     A1["a4lib.py: read runs, packet balance check,<br/>mean and 95 % CI"]
     A1 --> A2["plot_fig8.py: Fig. 8 against the paper"]
     A1 --> A3["analyse_simple.py: ns-3 against the model"]
-    A1 --> A4["analyse_sens.py, analyse_pilot.py,<br/>verify_traffic.py, compare_rules.py"]
+    A1 --> A4["analyse_sens.py, analyse_pilot.py, verify_traffic.py,<br/>compare_rules.py, plot_explained.py"]
     M1["edca_model.py: closed form,<br/>Markov chain, Monte Carlo"] --> A3
+    M1 --> M2["edca_variants.py: one-slot<br/>rule variants"]
+    P1["check_pcap.py: frame spacing<br/>in the AP traces"]
     D1["digitise_fig8.py: marker positions<br/>from the paper PDF"] --> A2
   end
   R2 --> S1
   S7 --> A1
+  S7 --> P1
 ```
 
 
@@ -76,20 +93,24 @@ ln -s ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/src/edca-fig8 \
   ~/ns-allinone-3.48/ns-3.48/scratch/edca-fig8
 cd ~/projects/MWN-2026-F11502002-Sascha/A4-baseline
 
-./scripts/run.sh all                                    # fig8, simple, sens, pilot, traffic
+./scripts/run.sh all                                    # fig8, simple, sens, pilot, traffic, pcap
 python scripts/edca_model.py --rounds 400000 --seeds 10 # reference model
+python scripts/edca_variants.py --rounds 150000 --seeds 3  # results/model/variants.md
 python scripts/plot_fig8.py                             # results/fig8/
 python scripts/analyse_simple.py                        # results/simple/
 python scripts/analyse_sens.py                          # results/sens/
 python scripts/verify_traffic.py --streams 3 --fps 60   # results/traffic/
 python scripts/analyse_pilot.py                         # results/pilot/
+python scripts/check_pcap.py                            # results/pcap/
 ```
+
+The legacy countdown sweep needs a patched ns-3, see section 6. `digitise_fig8.py` needs  the paper PDF, which is not in the repository (due to copyright); its output is [reference/mangold_fig8.csv](reference/mangold_fig8.csv).
 
 first simulation run took 58 minutes\
 analysis scripts run took 4 minutes
 
 [source code ns-3](src/edca-fig8/)\
-[analysis scripts](A4-baseline/scripts/)
+[analysis scripts](scripts/)
 
 ## 4 Validation
 
@@ -134,6 +155,10 @@ All differences are inside the confidence intervals, also for VO + VI + BE ([res
 
 ![Fig. 8, ns-3 against the paper](results/fig8/fig8.png)
 
+- **Matches:** up to 3 Mb/s per AC every AC carries its offer (within 0.05 Mb/s of the paper), the ACs lose throughput in the order BK, BE, VI, AC_VO saturates from 12 Mb/s on, and the total at overload is 14.08 against 14.12 Mb/s.
+- **Does not match:** the split between AC_VO and AC_VI at overload, and the AC_BK collapse at 3.6 to 4.5 Mb/s (section 6).
+- **Precision:** the 95 % confidence interval is at most ± 0.03 Mb/s and below 2 % of the mean for every point above 1 Mb/s, so no difference in section 6 is caused by too few runs.
+
 All 12 load points with confidence intervals: [results/fig8/comparison.md](results/fig8/comparison.md), loss and delay per AC: [results/fig8/summary.csv](results/fig8/summary.csv).
 
 
@@ -145,11 +170,11 @@ All 12 load points with confidence intervals: [results/fig8/comparison.md](resul
 | # | Difference | Cause | Evidence | Status |
 | :-- | :--- | :--- | :--- | :--- |
 | 1 | Overload (15 Mb/s and above): AC_VO 11.2 instead of 12.8, AC_VI 2.7 instead of 1.3, AC_BE 0.13 instead of 0 | Backoff countdown rule. ns-3 follows IEEE 802.11-2020: a waiting AC also counts down at the slot boundary at the end of its AIFS, so it gains one slot per busy period | With a DCF like countdown (one decrement per idle slot) the model gives 12.10 / 1.82 / 0.03, and a patched ns-3 gives 12.10 / 1.82 / 0.02 | 55 % (AC_VO) and 64 % (AC_VI) of the gap explained, the rest is open (see below) |
-| 2 | Knee of AC_VO at 12 Mb/s: 11.22 instead of 11.92 | Same as 1 | Patched ns-3: 11.97 | Explained |
-| 3 | AC_BK at 3.6 to 4.5 Mb/s: 2.04, 1.02, 0.91 instead of about 0 | Unknown. In the paper up to 3 Mb/s of capacity stay unused at these points although AC_BK has traffic, in ns-3 AC_BK uses them | Not the queue size, lifetime, retry limit or beacons (AC_BK stays at 2.05 ± 0.01 in all variants), not the countdown rule (1.92 at 3.6 Mb/s) | Not explained (see below) |
+| 2 | Knee of AC_VO at 12 Mb/s: 11.22 instead of 11.92 | Same as 1 | Patched ns-3: 11.99 ± 0.04 | Explained |
+| 3 | AC_BK at 3.6 to 4.5 Mb/s: 2.04, 1.02, 0.91 instead of about 0 | Unknown. In the paper up to 3 Mb/s of capacity stay unused at these points although AC_BK has traffic, in ns-3 AC_BK uses them | Not the queue size, lifetime, retry limit or beacons (AC_BK stays at 2.04 to 2.05 ± 0.07 in all variants, 3 runs), not the countdown rule (1.92 at 3.6 Mb/s) | Not explained (see below) |
 | 4 | AC_BE at 4.2 and 4.5 Mb/s: 3.77 and 3.37 instead of 4.19 and 4.16 | Consequence of 3: AC_BK still takes about 1 Mb/s | Sum of AC_BE and AC_BK: 4.79 and 4.28 in ns-3 | Follows from 3 |
 | 5 | Total at overload: 14.08 instead of 14.12 | Inside the accuracy of the digitisation | | No difference |
-| 6 | Radio channel error model in the paper, error free channel here | Unmodelled effect | Not tested | Open |
+| 6 | Radio channel error model in the paper, error free channel here | Unmodelled effect | Not simulated. The paper's total at overload lies inside the range of the error free rule variants (see below) | Bounded: at most about 2 % frame errors, if the paper's rules lie in the tested range |
 
 The patched ns-3 is stock ns-3.48 with one statement removed ([patches/legacy-countdown.patch](patches/legacy-countdown.patch)), 10 runs per point: [results-legacy/fig8/explained.md](results-legacy/fig8/explained.md).
 
@@ -171,11 +196,11 @@ patch -R -p1 < ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/patches/legacy-c
 ```
  The paper itself states that the first countdown occurs at the end of AIFS, which is the rule of ns-3. I therefore cannot say which rule its simulator, based on a 2003 draft, actually applied or what else differs.
 
-**Remaining overload gap (row 1).** The split between AC_VO and AC_VI at overload depends on one-slot details of their arbitration. In the reference model, a single change of one slot reproduces the paper about as well as any other: AIFSN 3 for AC_VI gives 12.46 / 1.35 Mb/s, CWmin 15 for AC_VI with the legacy rule 12.58 / 1.31 Mb/s (paper 12.82 / 1.30, [results/model/variants.md](results/model/variants.md)). Several different details fit, so the paper's data cannot tell which one its simulator used. Channel errors can only be rare in the paper, since the total at overload agrees within 0.3 %.
+**Remaining overload gap (row 1).** The split between AC_VO and AC_VI at overload depends on one-slot details of their arbitration. In the reference model, a single change of one slot reproduces the paper about as well as any other: AIFSN 3 for AC_VI gives 12.46 / 1.35 Mb/s, CWmin 15 for AC_VI with the legacy rule 12.58 / 1.31 Mb/s (paper 12.82 / 1.30, [results/model/variants.md](results/model/variants.md)). Several different details fit, so the paper's data cannot tell which one its simulator used. Without channel errors these variants give a total of 13.89 to 14.20 Mb/s at overload. Each frame error costs one frame exchange, so a frame error rate p lowers the total by roughly the share p. With p = 2 % even the highest variant would drop to 13.9 Mb/s, the lower end of the range, so the paper's 14.12 Mb/s leaves room for rare errors only.
 
-**AC_BK collapse (row 3).** At 3.68 Mb/s per AC the paper shows AC_BK at 0 while the other three ACs carry their offer, about 11 Mb/s in total. Each of these frames occupies the medium for at least 264 µs plus AIFS, so roughly a quarter of the time the medium is idle while AC_BK has frames queued. Every rule variant I tested lets AC_BK use this idle time. The paper's own AC_BK curve is also not monotonic: 0 at 3.7 to 4.6 Mb/s, then 0.30 at 6.1 Mb/s (ns-3: 0.26), then 0 again. A rule that starves AC_BK would starve it at 6 Mb/s as well. I therefore consider the zeros at 3.7 to 4.6 Mb/s a property of the reference (measurement or statistics), not of the EDCA rules; the paper does not report run length, warm up or how throughput is counted for an unstable queue.
+**AC_BK collapse (row 3).** At 3.68 Mb/s per AC the paper shows AC_BK at 0 while the other three ACs carry their offer, about 11 Mb/s in total. These are about 2 680 frames per second. Each occupies the medium for 264 µs plus its AIFS (18 or 27 µs after the SIFS), together 76 % of the time, so about a quarter of the time the medium is idle while AC_BK has frames queued. Every ns-3 variant I ran (both countdown rules, queue size, MSDU lifetime, retry limit, beacons) lets AC_BK use this idle time: 1.92 to 2.05 Mb/s at 3.6 Mb/s. The paper's own AC_BK curve is also not monotonic: 0 at 3.7 to 4.6 Mb/s, then 0.30 at 6.1 Mb/s (ns-3: 0.26), then 0 again. In ns-3 AC_BK falls monotonically with the load, as expected when the other ACs only get more traffic; a rule that starves AC_BK at 3.7 Mb/s would also starve it at 6 Mb/s. I therefore consider the zeros at 3.7 to 4.6 Mb/s a property of the reference (measurement or statistics), not of the EDCA rules; the paper does not report run length, warm up or how throughput is counted for an unstable queue.
 
-**PCAP.** Two traces of the AP (0.5 s measured, load 3.6 and 30 Mb/s per AC) are in [results/pcap/](results/pcap/). In both, the time between the starts of consecutive downlink data frames is always 264 µs + 9 µs · (AIFSN + remaining backoff), and no AC transmits before its AIFSN. Virtual collisions leave no trace on the air: only the winner transmits.
+**PCAP.** Two traces of the AP (`run.sh pcap`: 0.5 s measured, 3.6 and 30 Mb/s per AC) are in [results/pcap/](results/pcap/). In both, the time between the starts of consecutive downlink data frames is always 264 µs plus a whole number of 9 µs slots, and no AC transmits before its AIFSN ([results/pcap/pcap.md](results/pcap/pcap.md), `check_pcap.py`). Virtual collisions leave no trace on the air: only the winner transmits. In Wireshark: filter `wlan.fc.type_subtype == 0x0028 && wlan.fc.fromds == 1`, columns `wlan.qos.tid` and `frame.time_delta_displayed`.
 
 
 ## 7 Baseline for the final project: hypothesis and pilot
@@ -187,7 +212,7 @@ patch -R -p1 < ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/patches/legacy-c
 **Expectation from background knowledge.**
 
 1. Throughput cannot show burstiness: below the capacity every AC carries its offer, and in overload the AC_VI queue is always backlogged, whatever the arrival process is.
-2. AC_VO wins every virtual collision, so it waits for at most one frame exchange of AC_VI.
+2. AC_VO wins every virtual collision. How often AC_VI wins a round against AC_VO depends only on whether AC_VI has a frame, not on how many frames are queued, so a burst does not block AC_VO longer than a single frame.
 3. A burst of N MSDUs delays its own packets: packet k waits for k frame exchanges, on average (N + 1) / 2 of them.
 
 **Pilot.** AC_VI as Poisson source against AC_VI as periodic bursts (60 frames/s per stream, 4, 8 and 12 MSDUs of 512 byte per frame), at the same mean load, with independent and with aligned frame phases of the three streams. The other ACs stay Poisson. 10 runs each.
@@ -208,7 +233,7 @@ patch -R -p1 < ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/patches/legacy-c
 Full tables with confidence intervals: [results/pilot/pilot.md](results/pilot/pilot.md).
 
 1. **Throughput does not change.** 23 of 24 differences have a confidence interval that includes zero, the remaining one is 0.016 ± 0.014 Mb/s.
-2. **AC_VO does not notice the bursts.** Its delay distribution is the same for all three arrival processes.
+2. **AC_VO hardly notices the bursts.** Its mean delay is the same for all three arrival processes at all loads. Only at 8.85 Mb/s with aligned phases is its 99 % delay slightly higher (5.01 ± 0.14 against 4.82 ± 0.11 ms), at the edge of the confidence intervals.
 3. **AC_VI delays itself.** At 2.95 Mb/s with aligned phases 12 MSDUs arrive together. One AC_VI frame exchange takes 0.31 ms (step 1), so (12 + 1) / 2 · 0.31 ms = 2.0 ms is the lower bound. 2.89 ms is measured, because the other ACs transmit in between. Three streams only add up when their phases align (2.89 against 1.25 ms).
 4. **Near saturation the order reverses.** At 5.90 Mb/s the Poisson source has the longer tail (99 %: 27.5 against 16.5 ms), because a periodic source has no long clusters of arrivals.
 5. **In overload only the frame level differs.** With half of the MSDUs lost, 65 to 87 % of the video frames are incomplete.

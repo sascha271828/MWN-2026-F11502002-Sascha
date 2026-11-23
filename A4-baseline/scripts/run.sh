@@ -12,7 +12,9 @@
 #   sens     sensitivity to the parameters the paper does not report (MAC
 #            queue size, MSDU lifetime, beacons, retry limit) at two load points
 #   traffic  arrival logs for the traffic model verification (verify_traffic.py)
-#   all      the five above
+#   pcap     PCAP traces of the AP for Wireshark (check_pcap.py): one run per
+#            load, 0.2 s warm-up and 0.5 s measured, plus the association
+#   all      the six above
 #
 # Environment variables (all optional):
 #   NS3_DIR      ns-3 root, default ~/ns-allinone-3.48/ns-3.48
@@ -20,6 +22,7 @@
 #   SIMPLE_RUNS  run numbers for simple, default "1 2 3 4 5"
 #   SENS_RUNS    run numbers for sens, default "1 2 3"
 #   TRAFFIC_RUNS run numbers for traffic, default "1 2 3 4 5 6 7 8"
+#   PCAP_LOADS   pcap: offered traffic per AC [Mb/s], default "3.6 30"
 #   SENS_LOADS   sens: offered traffic per AC [Mb/s], default "3.6 30"
 #                (collapse of AC_BK and saturation)
 #   MEAS         measurement window per run [s], default 30
@@ -37,13 +40,14 @@
 # the folder) to repeat a point. The analysis scripts merge the raw files.
 set -euo pipefail
 
-EXPERIMENT="${1:?usage: run.sh fig8|simple|pilot|sens|traffic|all [results-root]}"
+EXPERIMENT="${1:?usage: run.sh fig8|simple|pilot|sens|traffic|pcap|all [results-root]}"
 NS3_DIR="${NS3_DIR:-$HOME/ns-allinone-3.48/ns-3.48}"
 RUNS="${RUNS:-1 2 3 4 5 6 7 8 9 10}"
 SIMPLE_RUNS="${SIMPLE_RUNS:-1 2 3 4 5}"
 SENS_RUNS="${SENS_RUNS:-1 2 3}"
 SENS_LOADS="${SENS_LOADS:-3.6 30}"
 TRAFFIC_RUNS="${TRAFFIC_RUNS:-1 2 3 4 5 6 7 8}"
+PCAP_LOADS="${PCAP_LOADS:-3.6 30}"
 MEAS="${MEAS:-30}"
 LOADS="${LOADS:-1.5 3 3.6 4.2 4.5 6 7.5 9 12 15 18 30}"
 SAT_LOAD="${SAT_LOAD:-30}"
@@ -128,9 +132,18 @@ jobs_traffic() {
          "--viFps=$PILOT_FPS --arrivalFile=$ROOT/traffic/raw/burst_run_1.arrivals"
 }
 
+jobs_pcap() {
+    # short runs: a trace of 30 s would be about 90 MB. The later --measTime
+    # overrides the one that one() puts in front.
+    for load in $PCAP_LOADS; do
+        echo "pcap/raw/load_${load} --tag=pcap --load=$load --run=1 --warmup=0.2 --measTime=0.5" \
+             "--pcapPrefix=$ROOT/pcap/edca-fig8-load${load}"
+    done
+}
+
 case "$EXPERIMENT" in
-    fig8|simple|pilot|sens|traffic) EXPERIMENTS="$EXPERIMENT" ;;
-    all) EXPERIMENTS="fig8 simple pilot sens traffic" ;;
+    fig8|simple|pilot|sens|traffic|pcap) EXPERIMENTS="$EXPERIMENT" ;;
+    all) EXPERIMENTS="fig8 simple pilot sens traffic pcap" ;;
     *) echo "unknown experiment: $EXPERIMENT" >&2; exit 1 ;;
 esac
 
@@ -168,6 +181,9 @@ for exp in $EXPERIMENTS; do
         echo "ns3=$(cat VERSION 2>/dev/null || echo unknown)"
         # identifies the countdown rule: stock ns-3.48 or patches/legacy-countdown.patch
         echo "channel_access_manager_md5=$CAM_MD5"
+        echo "profile=$(./ns3 show profile 2>/dev/null | sed -n 's/^Build profile: //p')"
+        echo "compiler=$(sed -n 's/^CMAKE_CXX_COMPILER:[A-Z]*=//p' cmake-cache/CMakeCache.txt 2>/dev/null)" \
+             "$(c++ --version 2>/dev/null | head -1)"
         echo "seed=1"
         echo "measTime=$MEAS"
         echo "extra=$EXTRA"
@@ -177,6 +193,7 @@ for exp in $EXPERIMENTS; do
             pilot)  echo "runs=$RUNS"; echo "loads=$PILOT_LOADS"; echo "fps=$PILOT_FPS" ;;
             sens)   echo "runs=$SENS_RUNS"; echo "loads=$SENS_LOADS" ;;
             traffic) echo "runs=$TRAFFIC_RUNS" ;;
+            pcap)   echo "runs=1"; echo "loads=$PCAP_LOADS"; echo "warmup=0.2"; echo "pcapMeasTime=0.5" ;;
         esac
     } > "$ROOT/$exp/sweep.txt"
     "jobs_$exp" | xargs -P "$JOBS" -L 1 bash -c 'one "$@"' _
