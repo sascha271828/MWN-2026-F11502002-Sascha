@@ -70,10 +70,10 @@ have an LLM review it, and commit the feedback.
 
 - [Assignment Information](https://hackmd.io/jOXxNllMRY-hr_C1fQct6w#A4-%E2%80%94-Baseline-Reproduction)
 - Submissions:
-  - [ ] [Study Note](A4-baseline/study-note.md)
-  - [ ] [Flowchart](A4-baseline/study-note.md#3-flowchart-and-source-code), [source code ns-3](src/edca-fig8/), [analysis scripts](A4-baseline/scripts/)
-  - [ ] [Numerical results](A4-baseline/study-note.md#5-numerical-results-fig-8-against-the-paper) — plotted against the paper's figure, with parameters, seeds and run count
-  - [ ] [Slides](path to slides) — [Rehearsal Presentation](path to recording), [Feedback](A4-baseline/doc/feedback.md)
+  - [x] [Study Note](A4-baseline/study-note.md)
+  - [x] [Flowchart](A4-baseline/study-note.md#3-flowchart-and-source-code), [source code ns-3](src/edca-fig8/), [analysis scripts](A4-baseline/scripts/)
+  - [x] [Numerical results](A4-baseline/study-note.md#5-numerical-results-fig-8-against-the-paper) — plotted against the paper's figure, with parameters, seeds and run count
+  - [ ] [Slides](A4-baseline/slides/MWN-A4.pdf) — [Rehearsal Presentation](path to recording), [Feedback](A4-baseline/doc/feedback.md)
   - [ ] Peer Review (during class)
 
 ### Final Project — Your Modification
