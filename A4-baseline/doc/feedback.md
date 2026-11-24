@@ -1,7 +1,7 @@
 # Powerpoint Speaker Coach Feedback
 
-![Powerpoint Speaker Coach Feedback 1](path to feedback 1)
+![Powerpoint Speaker Coach Feedback 1](01_powerpoint_speaker_1.png)
 ---
-![Powerpoint Speaker Coach Feedback 2](path to feedback 2)
+![Powerpoint Speaker Coach Feedback 2](01_powerpoint_speaker_2.png)
 
 

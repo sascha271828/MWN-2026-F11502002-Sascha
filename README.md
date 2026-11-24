@@ -73,7 +73,7 @@ have an LLM review it, and commit the feedback.
   - [x] [Study Note](A4-baseline/study-note.md)
   - [x] [Flowchart](A4-baseline/study-note.md#3-flowchart-and-source-code), [source code ns-3](A4-baseline/src/edca-fig8/), [analysis scripts](A4-baseline/scripts/)
   - [x] [Numerical results](A4-baseline/study-note.md#5-numerical-results-fig-8-against-the-paper) — plotted against the paper's figure, with parameters, seeds and run count
-  - [ ] [Slides](A4-baseline/slides/MWN-A4.pdf) — [Rehearsal Presentation](path to recording), [Feedback](A4-baseline/doc/feedback.md)
+  - [x] [Slides](A4-baseline/slides/MWN-A4.pdf) — [Rehearsal Presentation](https://drive.google.com/file/d/1XS_5x6E3GB29jBhQxZKK9Tv35eOuIks8/view?usp=sharing), [Feedback](A4-baseline/doc/feedback.md)
   - [ ] Peer Review (during class)
 
 ### Final Project — Your Modification
