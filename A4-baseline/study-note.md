@@ -104,7 +104,7 @@ python scripts/analyse_pilot.py                         # results/pilot/
 python scripts/check_pcap.py                            # results/pcap/
 ```
 
-The legacy countdown sweep needs a patched ns-3, see section 6. `digitise_fig8.py` needs  the paper PDF, which is not in the repository (due to copyright); its output is [reference/mangold_fig8.csv](reference/mangold_fig8.csv).
+The legacy countdown sweep needs a patched ns-3, see section 6. `digitise_fig8.py` needs the paper PDF, which is not in the repository (due to copyright); its output is [reference/mangold_fig8.csv](reference/mangold_fig8.csv).
 
 first simulation run took 58 minutes\
 analysis scripts run took 4 minutes
@@ -117,6 +117,10 @@ analysis scripts run took 4 minutes
 Before comparing with the paper, I check the simulation against values I can calculate myself, from the simplest case upwards.
 
 **Step 0, traffic source.** 105 Poisson streams (9 runs): the mean inter-arrival time is 1.0012 ± 0.0010 times the model value, and the KS p-values are uniformly distributed (p = 0.34, 8 % below 0.05). The burst source sends exactly 8 MSDUs every 16.667 ms. Details: [results/traffic/traffic.md](results/traffic/traffic.md).
+
+![Gaps between packets of all Poisson streams against the exponential law](results/slides/traffic_ccdf.png)
+
+For a Poisson source the gap between packets, divided by its expected mean, follows e^(−x): a straight line on a logarithmic axis. The 831 612 measured gaps lie on that line down to 10⁻⁴ (`plot_slides.py`).
 
 **Step 1, one saturated AC alone.** Without contention every frame exchange takes the same time on average:
 
@@ -201,6 +205,10 @@ patch -R -p1 < ~/projects/MWN-2026-F11502002-Sascha/A4-baseline/patches/legacy-c
 **AC_BK collapse (row 3).** At 3.68 Mb/s per AC the paper shows AC_BK at 0 while the other three ACs carry their offer, about 11 Mb/s in total. These are about 2 680 frames per second. Each occupies the medium for 264 µs plus its AIFS (18 or 27 µs after the SIFS), together 76 % of the time, so about a quarter of the time the medium is idle while AC_BK has frames queued. Every ns-3 variant I ran (both countdown rules, queue size, MSDU lifetime, retry limit, beacons) lets AC_BK use this idle time: 1.92 to 2.05 Mb/s at 3.6 Mb/s. The paper's own AC_BK curve is also not monotonic: 0 at 3.7 to 4.6 Mb/s, then 0.30 at 6.1 Mb/s (ns-3: 0.26), then 0 again. In ns-3 AC_BK falls monotonically with the load, as expected when the other ACs only get more traffic; a rule that starves AC_BK at 3.7 Mb/s would also starve it at 6 Mb/s. I therefore consider the zeros at 3.7 to 4.6 Mb/s a property of the reference (measurement or statistics), not of the EDCA rules; the paper does not report run length, warm up or how throughput is counted for an unstable queue.
 
 **PCAP.** Two traces of the AP (`run.sh pcap`: 0.5 s measured, 3.6 and 30 Mb/s per AC) are in [results/pcap/](results/pcap/). In both, the time between the starts of consecutive downlink data frames is always 264 µs plus a whole number of 9 µs slots, and no AC transmits before its AIFSN ([results/pcap/pcap.md](results/pcap/pcap.md), `check_pcap.py`). Virtual collisions leave no trace on the air: only the winner transmits. In Wireshark: filter `wlan.fc.type_subtype == 0x0028 && wlan.fc.fromds == 1`, columns `wlan.qos.tid` and `frame.time_delta_displayed`.
+
+![Wireshark: AP trace with data frames and ACKs](doc/wireshark_capture.png)
+
+ns-3 stamps a sent frame at the start of its transmission and a received frame at the end of its reception. In the screenshot, DATA → ACK is therefore 204 + 16 + 28 = 248 µs, and ACK → DATA is 16 µs + 9 µs · (AIFSN + backoff), at least 34 µs for AC_VO and AC_VI and 43 µs for AC_BE.
 
 
 ## 7 Baseline for the final project: hypothesis and pilot
